@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Note } from "@/types/note";
-import css from "@/styles/NoteList.module.css";
+import css from "./NotesList.module.css";
 
 export default function NotesList({ notes }: { notes: Note[] }) {
   return (

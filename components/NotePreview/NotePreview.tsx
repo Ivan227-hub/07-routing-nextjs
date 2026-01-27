@@ -1,5 +1,5 @@
 import { Note } from "@/types/note";
-import css from "@/styles/NotePreview.module.css";
+import css from "./NotePreview.module.css";
 
 export default function NotePreview({ note }: { note: Note }) {
   return (

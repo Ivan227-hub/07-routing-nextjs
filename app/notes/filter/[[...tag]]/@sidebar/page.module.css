@@ -1,0 +1,24 @@
+/* page.module.css */
+.menuList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menuItem {
+  margin-bottom: 8px;
+}
+
+.menuLink {
+  display: inline-block;
+  padding: 6px 12px;
+  background-color: #0d6efd;
+  color: #fff;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.menuLink:hover {
+  background-color: #0b5ed7;
+}

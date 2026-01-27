@@ -1,0 +1,13 @@
+/* layout.css */
+.notesLayout {
+  display: flex;
+  gap: 20px;
+}
+
+.notesLayout aside {
+  width: 200px;
+}
+
+.notesLayout main {
+  flex-grow: 1;
+}

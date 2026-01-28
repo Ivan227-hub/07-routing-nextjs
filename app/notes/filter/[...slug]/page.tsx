@@ -23,4 +23,6 @@ export default function FilteredNotesPage({ params }: FilteredNotesPageProps) {
       </div>
     </div>
   );
+
+  
 }

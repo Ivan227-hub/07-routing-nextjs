@@ -1,23 +1,33 @@
+// app/@modal/Modal.tsx
 "use client";
 
-import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
+import { useRouter } from "next/navigation";
 import css from "./Modal.module.css";
 
-export default function Modal({ children }: { children: ReactNode }) {
+interface ModalProps {
+  children: ReactNode;    
+  onClose?: () => void;   
+}
+
+export default function Modal({ children, onClose }: ModalProps) {
   const router = useRouter();
 
-  const closeModal = () => {
-    router.back(); 
+  const handleClose = () => {
+    if (onClose) {
+      onClose();
+    } else {
+      router.back();
+    }
   };
 
   return (
-    <div className={css.overlay} onClick={closeModal}>
+    <div className={css.overlay} onClick={handleClose}>
       <div className={css.modal} onClick={(e) => e.stopPropagation()}>
-        <button className={css.closeButton} onClick={closeModal}>
+        <button className={css.closeButton} onClick={handleClose}>
           ×
         </button>
-        {children}
+        {children} {}
       </div>
     </div>
   );

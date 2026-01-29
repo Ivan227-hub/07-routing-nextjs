@@ -1,5 +1,4 @@
-"use client"; // ВЕРХНЕЕ место файла
-
+"use client"; 
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import NotesList from "@/components/NotesList/NotesList";

@@ -1,0 +1,19 @@
+/* NotesFilter.module.css */
+.container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+}
+
+.notesList {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.noteItem {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}

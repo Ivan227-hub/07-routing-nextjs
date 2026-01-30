@@ -1,0 +1,13 @@
+/* NotFound.module.css */
+.title {
+  font-size: 36px;
+  text-align: center;
+  margin-top: 40px;
+}
+
+.description {
+  font-size: 18px;
+  text-align: center;
+  margin-top: 20px;
+  color: #555;
+}

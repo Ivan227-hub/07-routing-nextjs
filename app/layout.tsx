@@ -14,6 +14,11 @@ const geistMono = Geist_Mono({
 });
 
 
+
+
+
+
+
 export const metadata: Metadata = {
   title: "NoteHub",
   description: "Notes app for managing your notes",

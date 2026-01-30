@@ -1,4 +1,5 @@
-import css from "./not-found.module.css";
+// app/not-found.tsx
+import css from './NotFound.module.css';
 
 export default function NotFoundPage() {
   return (

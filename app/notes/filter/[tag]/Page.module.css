@@ -1,0 +1,22 @@
+.container {
+  display: flex;
+}
+
+.notesList {
+  flex: 1;
+  padding: 1rem;
+}
+
+.noteItem {
+  display: block;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  margin-bottom: 0.5rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.noteItem:hover {
+  background: #f5f5f5;
+}

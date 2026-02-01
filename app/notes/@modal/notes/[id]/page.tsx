@@ -1,34 +1,32 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import Modal from "@/components/Modal/Modal";
-import css from "./NotePreview.module.css";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchNoteById } from "@/lib/api"; // <- важливо: fetchNoteById
 import { Note } from "@/types/note";
-import { getNoteById } from "@/lib/api";
+import Modal from "@/components/Modal/Modal";
 
 interface NotePageProps {
   params: { id: string };
 }
 
-export default function NotePreview({ params }: NotePageProps) {
+export default function NotePage({ params }: NotePageProps) {
   const { id } = params;
   const router = useRouter();
-  const [note, setNote] = useState<Note | null>(null);
 
-  useEffect(() => {
-    getNoteById(id).then(setNote);
-  }, [id]);
+  const { data, isLoading, isError } = useQuery<Note>({
+    queryKey: ["note", id],
+    queryFn: () => fetchNoteById(id), // <- тут теж fetchNoteById
+  });
 
-  if (!note) return null;
+  if (isLoading) return <p>Loading note...</p>;
+  if (isError || !data) return <p>Failed to load note.</p>;
 
   return (
-    <Modal onClose={() => router.back()}>
-      <div className={css.note}>
-        <h2 className={css.title}>{note.title}</h2>
-        <p className={css.content}>{note.content}</p>
-        <p className={css.tag}>Tag: {note.tag}</p>
-      </div>
+    <Modal>
+      <button onClick={() => router.back()}>Close</button>
+      <h2>{data.title}</h2>
+      <p>{data.content}</p>
     </Modal>
   );
 }

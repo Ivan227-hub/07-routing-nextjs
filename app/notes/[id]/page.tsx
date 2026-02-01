@@ -1,9 +1,11 @@
-// app/@modal/notes/[id]/page.tsx
 "use client";
 
-import Modal from "@/app/@modal/Modal";
-import css from "./NotePreview.module.css";
 import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { fetchNoteById } from "@/lib/api";
+import { Note } from "@/types/note";
+import Modal from "@/components/Modal/Modal";
+import css from "./NotePreview.module.css"; // стиль для заголовка і контенту
 
 interface NotePageProps {
   params: { id: string };
@@ -13,28 +15,21 @@ export default function NotePage({ params }: NotePageProps) {
   const { id } = params;
   const router = useRouter();
 
-  // Закриття модалки повертає на попередню сторінку
-  const handleClose = () => {
-    router.back();
-  };
+  const { data: note, isLoading, isError } = useQuery<Note>({
+    queryKey: ["note", id],
+    queryFn: () => fetchNoteById(id),
+  });
+
+  const handleClose = () => router.back();
+
+  if (isLoading) return <p>Loading note...</p>;
+  if (isError || !note) return <p>Failed to load note.</p>;
 
   return (
     <Modal onClose={handleClose}>
-      <div className={css.container}>
-        <button className={css.backBtn} onClick={handleClose}>
-          &larr; Back
-        </button>
-        <div className={css.header}>
-          <h2>Note {id}</h2>
-          <span className={css.tag}>Work</span> {/* тег можна динамічно змінювати */}
-        </div>
-        <div className={css.content}>
-          Content of note {id} goes here. {/* сюди можна вставити реальний текст нотатки */}
-        </div>
-        <div className={css.date}>
-          Created at: {new Date().toLocaleDateString()}
-        </div>
-      </div>
+      <h2 className={css.title}>{note.title}</h2>
+      <p className={css.content}>{note.content}</p>
+      <button onClick={handleClose}>Close</button>
     </Modal>
   );
 }

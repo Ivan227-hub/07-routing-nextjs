@@ -7,7 +7,7 @@ const api = axios.create({
 
 export const fetchNotes = async (tag?: string): Promise<Note[]> => {
   const { data } = await api.get("/notes", {
-    params: tag ? { tag } : {},
+    params: tag && tag !== "all" ? { tag } : {},
   });
   return data;
 };

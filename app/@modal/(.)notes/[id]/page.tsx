@@ -1,27 +1,32 @@
-import axios from "axios";
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { fetchNoteById } from "@/lib/api"; // правильний імпорт
 import { Note } from "@/types/note";
+import Modal from "@/components/Modal/Modal";
 
-const api = axios.create({
-  baseURL: "https://notehub-public.goit.study/api",
-});
+interface NotePageProps {
+  params: { id: string };
+}
 
-export const fetchNotes = async (tag?: string): Promise<Note[]> => {
-  const { data } = await api.get("/notes", {
-    params: tag && tag !== "all" ? { tag } : {},
+export default function NotePage({ params }: NotePageProps) {
+  const { id } = params;
+  const router = useRouter();
+
+  const { data, isLoading, isError } = useQuery<Note>({
+    queryKey: ["note", id],
+    queryFn: () => fetchNoteById(id),
   });
-  return data;
-};
 
-export const fetchNoteById = async (id: string): Promise<Note> => {
-  const { data } = await api.get(`/notes/${id}`);
-  return data;
-};
+  if (isLoading) return <p>Loading note...</p>;
+  if (isError || !data) return <p>Failed to load note.</p>;
 
-export const deleteNoteById = async (id: string): Promise<void> => {
-  await api.delete(`/notes/${id}`);
-
-
-
-
-
-};
+  return (
+    <Modal>
+      <button onClick={() => router.back()}>Close</button>
+      <h2>{data.title}</h2>
+      <p>{data.content}</p>
+    </Modal>
+  );
+}

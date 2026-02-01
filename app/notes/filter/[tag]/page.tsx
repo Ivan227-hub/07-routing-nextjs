@@ -3,14 +3,14 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Note } from "@/types/note";
-import { getNotes } from "@/lib/api";
+import { fetchNotes } from "@/lib/api";
 import SidebarNotes from "../@sidebar/SidebarNotes";
 import css from "./Page.module.css";
 import Link from "next/link";
 
 export default function FilteredNotesPage() {
   const params = useParams();
-  const tagParam = params.tag; // замість let → const
+  const tagParam = params.tag;
 
   // Якщо tagParam масив (якщо catch-all), беремо перший елемент
   const tag = Array.isArray(tagParam) ? tagParam[0] : tagParam;
@@ -18,7 +18,13 @@ export default function FilteredNotesPage() {
   const [notes, setNotes] = useState<Note[]>([]);
 
   useEffect(() => {
-    getNotes(tag === "all" ? undefined : tag).then(setNotes);
+    // Викликаємо fetchNotes, а не getNotes
+    fetchNotes(tag === "all" ? undefined : tag)
+      .then(setNotes)
+      .catch((err) => {
+        console.error("Failed to fetch notes:", err);
+        setNotes([]); // очищаємо список при помилці
+      });
   }, [tag]);
 
   return (
@@ -31,6 +37,7 @@ export default function FilteredNotesPage() {
             <p>{note.content}</p>
           </Link>
         ))}
+        {notes.length === 0 && <p>No notes found.</p>}
       </div>
     </div>
   );

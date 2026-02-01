@@ -19,4 +19,9 @@ export const fetchNoteById = async (id: string): Promise<Note> => {
 
 export const deleteNoteById = async (id: string): Promise<void> => {
   await api.delete(`/notes/${id}`);
+
+
+
+
+
 };

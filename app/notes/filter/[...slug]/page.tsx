@@ -12,6 +12,11 @@ interface Note {
   tags?: string[];
 }
 
+
+
+
+
+
 async function fetchNotes(tag?: string): Promise<Note[]> {
   const query = tag ? `?tag=${tag}` : "";
   const res = await fetch(`/api/notes${query}`);

@@ -1,44 +1,63 @@
 "use client";
 
-import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Note } from "@/types/note";
+import { useParams } from "next/navigation";
 import { fetchNotes } from "@/lib/api";
-import SidebarNotes from "../@sidebar/SidebarNotes";
-import css from "./Page.module.css";
-import Link from "next/link";
+import { Note } from "@/types/note";
+import NoteList from "@/components/NoteList/NoteList";
+import Pagination from "@/components/Pagination/Pagination";
 
-export default function FilteredNotesPage() {
+interface NotesResponse {
+  notes: Note[];
+  totalPages: number;
+}
+
+export default function NotesPage() {
   const params = useParams();
-  const tagParam = params.tag;
-
-  // Якщо tagParam масив (якщо catch-all), беремо перший елемент
-  const tag = Array.isArray(tagParam) ? tagParam[0] : tagParam;
+  const rawTag = params?.tag;
+  const tag = Array.isArray(rawTag) ? rawTag[0] : rawTag ?? "all"; // <-- исправлено
 
   const [notes, setNotes] = useState<Note[]>([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Викликаємо fetchNotes, а не getNotes
-    fetchNotes(tag === "all" ? undefined : tag)
-      .then(setNotes)
-      .catch((err) => {
+    async function loadNotes() {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const res: NotesResponse = await fetchNotes(
+          tag === "all" ? undefined : tag,
+          "", // search
+          page
+        );
+        setNotes(res.notes);
+        setTotalPages(res.totalPages);
+      } catch (err) {
         console.error("Failed to fetch notes:", err);
-        setNotes([]); // очищаємо список при помилці
-      });
-  }, [tag]);
+        setNotes([]);
+        setTotalPages(1);
+        setError("Failed to load notes.");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadNotes();
+  }, [tag, page]);
+
+  if (isLoading) return <p>Loading notes...</p>;
+  if (error) return <p>{error}</p>;
+  if (!notes || notes.length === 0) return <p>No notes found.</p>;
 
   return (
-    <div className={css.container}>
-      <SidebarNotes />
-      <div className={css.notesList}>
-        {notes.map((note) => (
-          <Link key={note.id} href={`/notes/${note.id}`} className={css.noteItem}>
-            <h3>{note.title}</h3>
-            <p>{note.content}</p>
-          </Link>
-        ))}
-        {notes.length === 0 && <p>No notes found.</p>}
-      </div>
+    <div>
+      <h1>Notes {tag !== "all" ? `- ${tag}` : ""}</h1>
+      <NoteList notes={notes} />
+      <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
     </div>
   );
 }

@@ -1,16 +1,14 @@
 import { ReactNode } from "react";
-import SidebarNotes from "@/components/SidebarNotes/SidebarNotes";
 
 type Props = {
   children: ReactNode;
+  sidebar: ReactNode;
 };
 
-export default function NotesLayout({ children }: Props) {
+export default function NotesLayout({ children, sidebar }: Props) {
   return (
     <div style={{ display: "flex", gap: "20px" }}>
-      <aside>
-        <SidebarNotes />
-      </aside>
+      <aside>{sidebar}</aside>
       <main style={{ flexGrow: 1 }}>{children}</main>
     </div>
   );

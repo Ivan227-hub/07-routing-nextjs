@@ -1,15 +1,21 @@
 import Link from "next/link";
 
 export default function DefaultSidebarSlot() {
-  // ✅ Масив тегів для керованості
-  const tags = ["All", "Work", "Personal", "Todo", "Meeting", "Shopping"];
+  const tags = [
+    { label: "All", value: "all" },
+    { label: "Work", value: "work" },
+    { label: "Personal", value: "personal" },
+    { label: "Todo", value: "todo" },
+    { label: "Meeting", value: "meeting" },
+    { label: "Shopping", value: "shopping" },
+  ];
 
   return (
     <nav>
       <ul>
-        {tags.map((tag) => (
-          <li key={tag}>
-            <Link href={`/notes/filter/${tag}`}>{tag}</Link>
+        {tags.map(({ label, value }) => (
+          <li key={value}>
+            <Link href={`/notes/filter/${value}`}>{label}</Link>
           </li>
         ))}
       </ul>
